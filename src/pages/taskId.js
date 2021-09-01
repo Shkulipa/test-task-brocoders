@@ -30,23 +30,31 @@ const TaskId = () => {
 	//redux:
 	const taskList = useSelector(state => state.tasks.tasksList);
 
-	//data:
+	//states:
 	const [isLoading, setLoading] = useState(true);
-	const data = taskList.find(task => task.id === id);
+	const [taskData, setTaskData] =  useState({});
 
-	console.log('redux: ', taskList)
 	useEffect(() => {
-		if (localStorage.getItem(TASKS_ARR_STORAGE)) {
-			const parseTaskListLocalStorage = JSON.parse(localStorage.getItem(TASKS_ARR_STORAGE));
-			const findTask = parseTaskListLocalStorage.find(task => task.id === id);
-			if(!findTask) {
-				return history.push('/404')
+		if(taskList.length > 0) {
+			const task = taskList.find(task => task.id === id);
+			if(task) {
+				setLoading(false);
+				setTaskData(task);
+			} else {
+				return redirect();
 			}
-			setLoading(false)
 		} else {
-			return history.push('/404')
+			return redirect();
 		}
-	}, [isLoading])
+	}, [taskList]);
+
+	const redirect = () => {
+		if(taskData) {
+			return null;
+		} else {
+			return history.push('/404');
+		}
+	}
 
 	if(isLoading) {
 		return (
@@ -58,7 +66,7 @@ const TaskId = () => {
 
 	return (
 		<Grid container justifyContent='center' alignItems='center' className={classes.card}>
-			id: ${id}
+			id: ${taskData.id}
 		</Grid>
 	);
 };
