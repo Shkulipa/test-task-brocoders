@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
+//react-redux:
+import { useDispatch, useSelector } from 'react-redux';
+import { addTask, removeTask } from '../../store/tasksReducer';
+
 //components:
 import Home from './home.js';
 
@@ -13,24 +17,25 @@ import SpendTime from '../../utils/spendTime';
 import { v4 as uuidv4 } from 'uuid';
 
 //variables:
-import { DESC_TASK, INIT_TASK, TIME_START } from '../../utils/consts';
+import { DESC_TASK_STORAGE, INIT_TASK, TIME_START_STORAGE } from '../../utils/consts';
 
 const HomeContainer = () => {
-	//tasks list
-	const [taskList, setTaskList] = useState([]);
+	//redux
+	const dispatch = useDispatch();
+	const taskList = useSelector(state => state.tasks.tasksList);
 
 	//input of task
 	const [inputTask, setInputTask] = useState(INIT_TASK);
 	const handleChange = e => {
 		setInputTask(e.currentTarget.value);
-		localStorage.setItem(DESC_TASK, JSON.stringify(e.currentTarget.value));
+		localStorage.setItem(DESC_TASK_STORAGE, JSON.stringify(e.currentTarget.value));
 	};
 	const {start, stop, time, isRun, setTimer} = useTimer();
 
 	useEffect(() => {
-		if (localStorage.getItem(TIME_START) && localStorage.getItem(DESC_TASK)) {
-			const startTime = JSON.parse(localStorage.getItem(TIME_START));
-			const descTask = JSON.parse(localStorage.getItem(DESC_TASK));
+		if (localStorage.getItem(TIME_START_STORAGE) && localStorage.getItem(DESC_TASK_STORAGE)) {
+			const startTime = JSON.parse(localStorage.getItem(TIME_START_STORAGE));
+			const descTask = JSON.parse(localStorage.getItem(DESC_TASK_STORAGE));
 			setInputTask(descTask);
 			setTimer(startTime);
 			start();
@@ -38,13 +43,13 @@ const HomeContainer = () => {
 	}, [])
 
 	const startTimer = () => {
-		localStorage.setItem(TIME_START, JSON.stringify(Date.now()));
-		localStorage.setItem(DESC_TASK, JSON.stringify(inputTask));
+		localStorage.setItem(TIME_START_STORAGE, JSON.stringify(Date.now()));
+		localStorage.setItem(DESC_TASK_STORAGE, JSON.stringify(inputTask));
 		start();
 	}
 
 	const stopTimer = () => {
-		const startTime = JSON.parse(localStorage.getItem(TIME_START));
+		const startTime = JSON.parse(localStorage.getItem(TIME_START_STORAGE));
 
 		const spendTime = SpendTime(startTime);
 		const parseDateStart = new Date(startTime);
@@ -77,18 +82,15 @@ const HomeContainer = () => {
 			},
 		};
 
-		setTaskList(state => ([newTaskCompleted, ...state]));
-
-		localStorage.removeItem(TIME_START);
-		localStorage.removeItem(DESC_TASK);
+		dispatch(addTask(newTaskCompleted));
+		localStorage.removeItem(TIME_START_STORAGE);
+		localStorage.removeItem(DESC_TASK_STORAGE);
 		setInputTask(INIT_TASK);
 		stop();
 	}
 
 	const deleteTask = id => {
-		const newArr = taskList.filter(item => item.id !== id)
-		setTaskList(newArr);
-		console.log(newArr);
+		dispatch(removeTask(id));
 	}
 
 	return (

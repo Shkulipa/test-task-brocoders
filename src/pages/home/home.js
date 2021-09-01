@@ -1,5 +1,8 @@
 import React from 'react';
 
+//react-router-dom
+import { useHistory } from "react-router-dom";
+
 //components:
 import TimeDisplay from '../../components/timeDisplay';
 
@@ -52,6 +55,9 @@ const useStyles = makeStyles({
 const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, taskList, deleteTask}) => {
 	//styles
 	const classes = useStyles();
+
+	//history
+	const history = useHistory();
 
 	return (
 		<>
@@ -175,7 +181,7 @@ const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, task
 						<TimeDisplayWithDate item xs={1} time={endTime} />
 						<TimeDisplay time={spendTime} item xs={1}/>
 						<Grid item xs={1}>
-							<Button variant='outlined' className={classes.btn}>
+							<Button variant='outlined' className={classes.btn} onClick={() => history.push('/task/' + id)}>
 								Info
 							</Button>
 						</Grid>
