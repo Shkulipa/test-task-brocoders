@@ -15,6 +15,7 @@ import Box from '@material-ui/core/Box';
 
 //components:
 import TimeDisplay from '../../components/timeDisplay';
+import LoaderSpinner from '../../components/loaderSpinner/loaderSpinner';
 
 //prop-types:
 import PropTypes from 'prop-types';
@@ -51,7 +52,7 @@ const TaskId = ({ taskData, isLoading }) => {
 				alignItems="center"
 				className={classes.card}
 			>
-				loading...
+				<LoaderSpinner />
 			</Grid>
 		);
 	}
