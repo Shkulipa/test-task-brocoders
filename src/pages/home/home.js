@@ -14,6 +14,9 @@ import Button from '@material-ui/core/Button';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Box from '@material-ui/core/Box';
 
+//react-flip-move: (https://www.npmjs.com/package/react-flip-move)
+import FlipMove from 'react-flip-move';
+
 //variables:
 import { COLOR_1, COLOR_2, BORDER_STYLE } from '../../utils/consts';
 
@@ -177,75 +180,79 @@ const Home = ({
 				</Grid>
 			</Grid>
 
-			{/*history log*/}
-			{taskList.map(
-				({ id, descTask, startTime, endTime, spendTime }, i) => {
-					return (
-						<Grid
-							key={id}
-							container
-							justifyContent="space-around"
-							alignItems="center"
-							className={classes.taskBlock}
-						>
-							<Grid item xs={1}>
-								<Box>{i + 1}</Box>
+			<FlipMove>
+				{/*history log*/}
+				{taskList.map(
+					({ id, descTask, startTime, endTime, spendTime }, i) => {
+						return (
+							<Grid
+								key={id}
+								container
+								justifyContent="space-around"
+								alignItems="center"
+								className={classes.taskBlock}
+							>
+								<Grid item xs={1}>
+									<Box>{i + 1}</Box>
+								</Grid>
+								<Grid item xs={1}>
+									<Box>
+										{descTask.length >= 13
+											? descTask.slice(0, 12) + '...'
+											: descTask}
+									</Box>
+								</Grid>
+								<Grid item xs={1}>
+									<TimeDisplay time={startTime} />
+								</Grid>
+								<Grid item xs={1}>
+									<TimeDisplay time={endTime} />
+								</Grid>
+								<Grid item xs={1}>
+									<TimeDisplay time={spendTime} />
+								</Grid>
+								<Grid item xs={1}>
+									<Button
+										variant="outlined"
+										className={classes.btn}
+										onClick={() =>
+											history.push('/task/' + id)
+										}
+									>
+										Info
+									</Button>
+								</Grid>
+								<Grid item xs={1}>
+									<Button
+										variant="outlined"
+										className={classes.btn}
+										onClick={() => deleteTask(id)}
+									>
+										Delete
+									</Button>
+								</Grid>
 							</Grid>
-							<Grid item xs={1}>
-								<Box>
-									{descTask.length >= 13
-										? descTask.slice(0, 12) + '...'
-										: descTask}
-								</Box>
-							</Grid>
-							<Grid item xs={1}>
-								<TimeDisplay time={startTime} />
-							</Grid>
-							<Grid item xs={1}>
-								<TimeDisplay time={endTime} />
-							</Grid>
-							<Grid item xs={1}>
-								<TimeDisplay time={spendTime} />
-							</Grid>
-							<Grid item xs={1}>
-								<Button
-									variant="outlined"
-									className={classes.btn}
-									onClick={() => history.push('/task/' + id)}
-								>
-									Info
-								</Button>
-							</Grid>
-							<Grid item xs={1}>
-								<Button
-									variant="outlined"
-									className={classes.btn}
-									onClick={() => deleteTask(id)}
-								>
-									Delete
-								</Button>
-							</Grid>
-						</Grid>
-					);
-				}
-			)}
+						);
+					}
+				)}
 
-			{/* Btn generate +15 tasks */}
-			<Grid
-				container
-				spacing={2}
-				direction="column"
-				alignItems="center"
-				className={classes.panelControl}
-			>
-				<Button
-					variant="outlined"
-					color="primary"
-					onClick={generateTasks}
+				{/* Btn generate +15 tasks */}
+				<Grid
+					container
+					spacing={2}
+					direction="column"
+					alignItems="center"
+					className={classes.panelControl}
 				>
-					Generate tasks
-				</Button>
-			</Grid>
+					<Button
+						variant="outlined"
+						color="primary"
+						onClick={generateTasks}
+					>
+						Generate tasks
+					</Button>
+				</Grid>
+			</FlipMove>
 		</>
 	);
 };
