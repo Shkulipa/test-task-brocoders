@@ -5,18 +5,32 @@ import { useParams, useHistory } from "react-router-dom";
 
 //variables:
 import { TASKS_ARR_STORAGE } from '../utils/consts';
-import { useSelector } from 'react-redux';
 
 //material-ui:
 import Grid from '@material-ui/core/Grid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Box from '@material-ui/core/Box';
+import TimeDisplay from '../components/timeDisplay';
 
-//styles:
 //styles:
 const useStyles = makeStyles({
 	card: {
 		height: '100vh',
 	},
+	fontSize: {
+		fontSize: 20
+	},
+	btn: {
+		fontSize: 15
+	},
+	marginRight: {
+		marginRight: 3
+	}
 });
 
 const TaskId = () => {
@@ -27,46 +41,96 @@ const TaskId = () => {
 	//styles
 	const classes = useStyles();
 
-	//redux:
-	const taskList = useSelector(state => state.tasks.tasksList);
-
 	//states:
 	const [isLoading, setLoading] = useState(true);
-	const [taskData, setTaskData] =  useState({});
+	const [taskData, setTaskData] =  useState(false);
 
+	//data:
 	useEffect(() => {
-		if(taskList.length > 0) {
-			const task = taskList.find(task => task.id === id);
-			if(task) {
-				setLoading(false);
-				setTaskData(task);
-			} else {
-				return redirect();
+		if (localStorage.getItem(TASKS_ARR_STORAGE)) {
+			const parseTaskListLocalStorage = JSON.parse(localStorage.getItem(TASKS_ARR_STORAGE));
+			const findTask = parseTaskListLocalStorage.find(task => task.id === id);
+			if(!findTask) {
+				return history.push('/404')
 			}
-		} else {
-			return redirect();
+			setLoading(false);
+			return setTaskData(findTask);
 		}
-	}, [taskList]);
 
-	const redirect = () => {
-		if(taskData) {
-			return null;
-		} else {
-			return history.push('/404');
-		}
-	}
+		return history.push('/404')
+	}, [isLoading])
 
 	if(isLoading) {
 		return (
-			<div>
+			<Grid container justifyContent='center' alignItems='center' className={classes.card}>
 				loading...
-			</div>
+			</Grid>
 		);
 	}
 
 	return (
 		<Grid container justifyContent='center' alignItems='center' className={classes.card}>
-			id: ${taskData.id}
+			<Card>
+				<CardContent>
+
+					<Grid container alignItems='center' className={classes.fontSize}>
+						<Box className={classes.marginRight}>
+							<b>Task:</b>
+						</Box>
+						<Box>
+							{taskData.descTask}
+						</Box>
+					</Grid>
+
+					<br />
+
+					<Grid container alignItems='flex-start' className={classes.fontSize}>
+						<Box className={classes.marginRight}>
+							<b>Start Time:</b>
+						</Box>
+						<Box >
+							<TimeDisplay
+								time={taskData.startTime}
+								className={classes.timerBlock}
+							/>
+						</Box>
+					</Grid>
+
+					<br />
+
+					<Grid container alignItems='flex-start' className={classes.fontSize}>
+						<Box className={classes.marginRight}>
+							<b>End Time:</b>
+						</Box>
+						<Box>
+							<TimeDisplay
+								time={taskData.endTime}
+								className={classes.timerBlock}
+							/>
+						</Box>
+					</Grid>
+
+					<br />
+
+					<Grid container alignItems='center' className={classes.fontSize}>
+						<Box className={classes.marginRight}>
+							<b>Spend Time:</b>
+						</Box>
+						<Box>
+							<TimeDisplay
+								time={taskData.spendTime}
+								className={classes.timerBlock}
+							/>
+						</Box>
+					</Grid>
+
+				</CardContent>
+				<CardActions>
+					<Button size="small" onClick={() => history.push('/')} className={classes.btn}>
+						<ArrowBackIcon fontSize='small' className={classes.marginRight} /> back
+					</Button>
+				</CardActions>
+			</Card>
 		</Grid>
 	);
 };

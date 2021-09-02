@@ -52,7 +52,7 @@ const useStyles = makeStyles({
 	}
 });
 
-const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, taskList, deleteTask}) => {
+const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, taskList, deleteTask, generateTasks}) => {
 	//styles
 	const classes = useStyles();
 
@@ -146,12 +146,12 @@ const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, task
 						Time end
 					</Box>
 				</Grid>
-				<Grid  item xs={1}>
+				<Grid item xs={1}>
 					<Box className={classes.panelControlItem}>
 						Time spend
 					</Box>
 				</Grid>
-				<Grid  item xs={1}>
+				<Grid item xs={1}>
 					<Box className={classes.panelControlItem}>
 						Info
 					</Box>
@@ -164,9 +164,10 @@ const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, task
 			</Grid>
 
 			{/*history log*/}
-			{taskList.map( ({id, descTask, startTime, endTime, spendTime}, i) =>{
+			{taskList.map(({id, descTask, startTime, endTime, spendTime}, i) => {
 				return (
-					<Grid key={id} container justifyContent='space-around' alignItems='center' className={classes.taskBlock}>
+					<Grid key={id} container justifyContent='space-around' alignItems='center'
+						  className={classes.taskBlock}>
 						<Grid item xs={1}>
 							<Box>
 								{i + 1}
@@ -174,14 +175,21 @@ const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, task
 						</Grid>
 						<Grid item xs={1}>
 							<Box>
-								{descTask.length >=13 ? descTask.slice(0, 12) + '...' :  descTask}
+								{descTask.length >= 13 ? descTask.slice(0, 12) + '...' : descTask}
 							</Box>
 						</Grid>
-						<TimeDisplayWithDate item xs={1} time={startTime} />
-						<TimeDisplayWithDate item xs={1} time={endTime} />
-						<TimeDisplay time={spendTime} item xs={1}/>
 						<Grid item xs={1}>
-							<Button variant='outlined' className={classes.btn} onClick={() => history.push('/task/' + id)}>
+							<TimeDisplay time={startTime} />
+						</Grid>
+						<Grid item xs={1}>
+							<TimeDisplay time={endTime} />
+						</Grid>
+						<Grid item xs={1}>
+							<TimeDisplay time={spendTime} />
+						</Grid>
+						<Grid item xs={1}>
+							<Button variant='outlined' className={classes.btn}
+									onClick={() => history.push('/task/' + id)}>
 								Info
 							</Button>
 						</Grid>
@@ -193,24 +201,20 @@ const Home = ({inputTask, handleChange, time, isRun, startTimer, stopTimer, task
 					</Grid>
 				)
 			})}
+
+			{/* Btn generate +15 tasks */}
+			<Grid
+				container spacing={2}
+				direction='column'
+				alignItems='center'
+				className={classes.panelControl}
+			>
+				<Button variant='outlined' color='primary' onClick={generateTasks}>
+					Generate tasks
+				</Button>
+			</Grid>
+
 		</>
-	);
-};
-
-const TimeDisplayWithDate = ({time, ...props}) => {
-	return (
-		<Grid {...props}>
-			<Box>
-				{time.h >= 10 ? time.h : '0'+time.h}
-				:{time.m >= 10 ? time.m : '0'+time.m}
-				:{time.s >= 10 ? time.s : '0'+time.s}
-				<br />
-
-				({time.day < 10 ? '0'+time.day : time.day}
-				.{time.month < 10 ? '0'+time.month : time.month}
-				.{time.year})
-			</Box>
-		</Grid>
 	);
 };
 

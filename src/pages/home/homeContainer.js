@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 //react-redux:
 import { useDispatch, useSelector } from 'react-redux';
-import { addTask, removeTask } from '../../store/tasksReducer';
+import { addTask, removeTask, removeAllTasks } from '../../store/tasksReducer';
 
 //components:
 import Home from './home.js';
@@ -10,11 +10,12 @@ import Home from './home.js';
 //Custom hooks:
 import useTimer from '../../hooks/useTimer';
 
-//helper functions:
-import SpendTime from '../../utils/spendTime';
+//services:
+import SpendTime from '../../services/spendTime';
+import DataTask from '../../services/dataTask';
 
-//uniq id:
-import { v4 as uuidv4 } from 'uuid';
+//utils:
+import { RANDOM_TASKS_ARR } from '../../utils/consts';
 
 //variables:
 import { DESC_TASK_STORAGE, INIT_TASK, TIME_START_STORAGE } from '../../utils/consts';
@@ -51,36 +52,16 @@ const HomeContainer = () => {
 	const stopTimer = () => {
 		const startTime = JSON.parse(localStorage.getItem(TIME_START_STORAGE));
 
-		const spendTime = SpendTime(startTime);
+		const spendTime = SpendTime(startTime, Date.now());
 		const parseDateStart = new Date(startTime);
 		const parseDateEnd = new Date(startTime + Date.parse(spendTime.spendTimeMs));
-		const id = uuidv4();
 
-		const newTaskCompleted = {
-			id,
+		const newTaskCompleted = DataTask({
+			startTime: parseDateStart,
+			endTime: parseDateEnd,
+			spendTime: spendTime,
 			descTask: inputTask,
-			startTime: {
-				h: parseDateStart.getHours(),
-				m: parseDateStart.getMinutes(),
-				s: parseDateStart.getSeconds(),
-				day: parseDateStart.getDate(),
-				month: parseDateStart.getMonth() + 1,
-				year: parseDateStart.getFullYear(),
-			},
-			endTime: {
-				h: parseDateEnd.getHours(),
-				m: parseDateEnd.getMinutes(),
-				s: parseDateEnd.getSeconds(),
-				day: parseDateEnd.getDate(),
-				month: parseDateEnd.getMonth() + 1,
-				year: parseDateEnd.getFullYear(),
-			},
-			spendTime: {
-				h: spendTime.hours,
-				m: spendTime.minutes,
-				s: spendTime.seconds
-			},
-		};
+		});
 
 		dispatch(addTask(newTaskCompleted));
 		localStorage.removeItem(TIME_START_STORAGE);
@@ -93,6 +74,46 @@ const HomeContainer = () => {
 		dispatch(removeTask(id));
 	}
 
+	//generateTasks
+	const generateTasks = () => {
+		dispatch(removeAllTasks());
+
+		//count tasks
+		const countTasks = Math.floor(Math.random() * 6) + 10;
+
+		//Date start
+		const forLastDays = 7;
+		const randomHoursStartTime = (Math.floor(Math.random() * 24) + 1) * 1000 * 60 * 24;
+		const randomMinutesStartTime = (Math.floor(Math.random() * 60) + 1) * 1000 * 60;
+		const randomSecondsStartTime = (Math.floor(Math.random() * 60) + 1) * 1000;
+		const randomDaysStartTime = (Math.floor(Math.random() * forLastDays) + 1) * 1000 * 60 * 60 * 24;
+		const randomStartTaskDate = new Date(Date.now() - randomDaysStartTime - randomSecondsStartTime - randomMinutesStartTime - randomHoursStartTime);
+
+		//generate tasks
+		let plusTimeToDateStart = Date.parse(randomStartTaskDate);
+		for (let i = 0; i < countTasks; i++) {
+			//dates start/end/spend time
+			const startTime = new Date(plusTimeToDateStart);
+			const randomTimeSpendHours = (Math.floor(Math.random() * 90) + 10) * 1000 * 60;
+			const randomTimeSpendSeconds = (Math.floor(Math.random() * 60)) * 1000;
+			const randomTimeSpend = randomTimeSpendHours + randomTimeSpendSeconds;
+			plusTimeToDateStart += randomTimeSpend;
+			const dateEndTask = new Date(plusTimeToDateStart);
+			const spendTime = SpendTime(startTime, dateEndTask);
+			const randomNameTask = Math.round(Math.random() * RANDOM_TASKS_ARR.length);
+
+			//obj data of task
+			const newTaskCompleted = DataTask({
+				startTime: startTime,
+				endTime: dateEndTask,
+				spendTime: spendTime,
+				descTask: RANDOM_TASKS_ARR[randomNameTask],
+			});
+
+			dispatch(addTask(newTaskCompleted));
+		}
+	}
+
 	return (
 		<Home
 			inputTask={inputTask}
@@ -103,6 +124,7 @@ const HomeContainer = () => {
 			stopTimer={stopTimer}
 			taskList={taskList}
 			deleteTask={deleteTask}
+			generateTasks={generateTasks}
 		/>
 	);
 };

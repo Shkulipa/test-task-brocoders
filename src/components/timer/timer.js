@@ -2,6 +2,7 @@ import React from 'react';
 
 //material-ui:
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import Grid from '@material-ui/core/Grid';
 
 //components:
 import TimeDisplay from '../timeDisplay';
@@ -29,15 +30,18 @@ const Timer = ({time}) => {
 	const classes = useStyles();
 
 	return (
-		<TimeDisplay
+		<Grid
 			container
 			justifyContent='center'
 			alignItems='center'
-			className={classes.circle}
 			spacing={1}
-			time={time}
-			classNameItemInner={classes.timerBlock}
-		/>
+			className={classes.circle}
+		>
+			<TimeDisplay
+				time={time}
+				className={classes.timerBlock}
+			/>
+		</ Grid>
 	);
 };
 

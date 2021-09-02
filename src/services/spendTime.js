@@ -1,6 +1,6 @@
-const SpendTime = startTime => {
+const SpendTime = (startTime, endTime) => {
 	const dateStartTask = new Date(startTime);
-	const newTime = new Date(Date.now() - dateStartTask);
+	const newTime = new Date(endTime - dateStartTask);
 	const hours = parseInt((newTime / (1000 * 60 * 60)) % 24),
 		minutes = parseInt((newTime / (1000 * 60)) % 60),
 		seconds = parseInt((newTime / 1000) % 60);
