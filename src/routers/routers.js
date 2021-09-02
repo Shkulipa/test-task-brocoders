@@ -1,6 +1,6 @@
 //components:
 import HomeContainer from '../pages/home/homeContainer';
-import TaskId from '../pages/taskId';
+import TaskIdContainer from '../pages/taskId/taskIdContainer';
 import Error404 from '../pages/Error404';
 
 //variables:
@@ -14,7 +14,7 @@ export const routers = [
 	},
 	{
 		path: TASK_ROUTE + '/:id',
-		Component: TaskId,
+		Component: TaskIdContainer,
 		isExact: true,
 	},
 	{

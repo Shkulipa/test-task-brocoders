@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 //react-router-dom:
-import { useParams, useHistory } from "react-router-dom";
-
-//variables:
-import { TASKS_ARR_STORAGE } from '../utils/consts';
+import { useHistory } from "react-router-dom";
 
 //material-ui:
 import Grid from '@material-ui/core/Grid';
@@ -15,7 +12,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Box from '@material-ui/core/Box';
-import TimeDisplay from '../components/timeDisplay';
+import TimeDisplay from '../../components/timeDisplay';
 
 //styles:
 const useStyles = makeStyles({
@@ -33,32 +30,12 @@ const useStyles = makeStyles({
 	}
 });
 
-const TaskId = () => {
+const TaskId = ({taskData, isLoading}) => {
 	//react-router-dom:
-	let { id } = useParams();
 	const history = useHistory();
 
 	//styles
 	const classes = useStyles();
-
-	//states:
-	const [isLoading, setLoading] = useState(true);
-	const [taskData, setTaskData] =  useState(false);
-
-	//data:
-	useEffect(() => {
-		if (localStorage.getItem(TASKS_ARR_STORAGE)) {
-			const parseTaskListLocalStorage = JSON.parse(localStorage.getItem(TASKS_ARR_STORAGE));
-			const findTask = parseTaskListLocalStorage.find(task => task.id === id);
-			if(!findTask) {
-				return history.push('/404')
-			}
-			setLoading(false);
-			return setTaskData(findTask);
-		}
-
-		return history.push('/404')
-	}, [isLoading])
 
 	if(isLoading) {
 		return (
