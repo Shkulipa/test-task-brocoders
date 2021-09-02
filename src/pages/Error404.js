@@ -4,7 +4,7 @@ import React from 'react';
 import img404 from './../assets/images/error-404-design.png';
 
 //react-router-dom:
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 //material-ui:
 import Grid from '@material-ui/core/Grid';
@@ -18,26 +18,41 @@ const useStyles = makeStyles({
 		height: '100vh',
 	},
 	block: {
-		marginTop: 15
-	}
+		marginTop: 15,
+	},
 });
 
 const Error404 = () => {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const goHome = () => history.push("/");
+	const goHome = () => history.push('/');
 
 	return (
-		<Grid container justifyContent='center' alignItems='center' direction='column' className={classes.errorBlock}>
+		<Grid
+			container
+			justifyContent="center"
+			alignItems="center"
+			direction="column"
+			className={classes.errorBlock}
+		>
 			<Grid item>
-				<img src={img404} alt='404' />
+				<img src={img404} alt="404" />
 			</Grid>
 			<Grid item>
 				<Alert severity="error">Sorry, this page not found :(</Alert>
 			</Grid>
 			<Grid item className={classes.block}>
-				Go <Link color="primary" href="#" underline="always" onClick={goHome}>Home</Link>?
+				Go{' '}
+				<Link
+					color="primary"
+					href="#"
+					underline="always"
+					onClick={goHome}
+				>
+					Home
+				</Link>
+				?
 			</Grid>
 		</Grid>
 	);

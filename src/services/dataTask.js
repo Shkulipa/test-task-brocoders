@@ -1,10 +1,10 @@
 //uuid:
 import { v4 as uuidv4 } from 'uuid';
 
-const DataTask = ({startTime, endTime, spendTime, descTask}) => {
+const DataTask = ({ startTime, endTime, spendTime, descTask }) => {
 	const id = uuidv4();
 
-	return ({
+	return {
 		id,
 		descTask,
 		startTime: {
@@ -26,9 +26,9 @@ const DataTask = ({startTime, endTime, spendTime, descTask}) => {
 		spendTime: {
 			h: spendTime.hours,
 			m: spendTime.minutes,
-			s: spendTime.seconds
+			s: spendTime.seconds,
 		},
-	})
+	};
 };
 
 export default DataTask;

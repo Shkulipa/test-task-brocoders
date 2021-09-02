@@ -4,7 +4,12 @@ import TaskIdContainer from '../pages/taskId/taskIdContainer';
 import Error404 from '../pages/Error404';
 
 //variables:
-import { ERROR_404_ROUTE, HOME_ROUTE, NOT_FOUND_ROUTE, TASK_ROUTE } from '../utils/consts';
+import {
+	ERROR_404_ROUTE,
+	HOME_ROUTE,
+	NOT_FOUND_ROUTE,
+	TASK_ROUTE,
+} from '../utils/consts';
 
 export const routers = [
 	{
@@ -27,5 +32,4 @@ export const routers = [
 		Component: Error404,
 		isExact: false,
 	},
-
 ];
