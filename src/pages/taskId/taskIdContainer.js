@@ -12,7 +12,7 @@ const TaskIdContainer = () => {
 
 	//states:
 	const [isLoading, setLoading] = useState(true);
-	const [taskData, setTaskData] = useState(false);
+	const [taskData, setTaskData] = useState({});
 
 	//data:
 	useEffect(() => {
@@ -21,13 +21,13 @@ const TaskIdContainer = () => {
 				localStorage.getItem(TASKS_ARR_STORAGE)
 			);
 			const findTask = parseTaskListLocalStorage.find(
-				task => task.id === id
+				task => task.payload.id === id
 			);
 			if (!findTask) {
 				return history.push('/404');
 			}
 			setLoading(false);
-			return setTaskData(findTask);
+			return setTaskData(findTask.payload);
 		}
 
 		return history.push('/404');

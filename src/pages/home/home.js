@@ -182,59 +182,58 @@ const Home = ({
 
 			<FlipMove>
 				{/*history log*/}
-				{taskList.map(
-					({ id, descTask, startTime, endTime, spendTime }, i) => {
-						return (
-							<Grid
-								key={id}
-								container
-								justifyContent="space-around"
-								alignItems="center"
-								className={classes.taskBlock}
-							>
-								<Grid item xs={1}>
-									<Box>{i + 1}</Box>
-								</Grid>
-								<Grid item xs={1}>
-									<Box>
-										{descTask.length >= 13
-											? descTask.slice(0, 12) + '...'
-											: descTask}
-									</Box>
-								</Grid>
-								<Grid item xs={1}>
-									<TimeDisplay time={startTime} />
-								</Grid>
-								<Grid item xs={1}>
-									<TimeDisplay time={endTime} />
-								</Grid>
-								<Grid item xs={1}>
-									<TimeDisplay time={spendTime} />
-								</Grid>
-								<Grid item xs={1}>
-									<Button
-										variant="outlined"
-										className={classes.btn}
-										onClick={() =>
-											history.push('/task/' + id)
-										}
-									>
-										Info
-									</Button>
-								</Grid>
-								<Grid item xs={1}>
-									<Button
-										variant="outlined"
-										className={classes.btn}
-										onClick={() => deleteTask(id)}
-									>
-										Delete
-									</Button>
-								</Grid>
+				{taskList.map(({ payload }, i) => {
+					const { id, descTask, endTime, spendTime, startTime } =
+						payload;
+
+					return (
+						<Grid
+							key={id}
+							container
+							justifyContent="space-around"
+							alignItems="center"
+							className={classes.taskBlock}
+						>
+							<Grid item xs={1}>
+								<Box>{i + 1}</Box>
 							</Grid>
-						);
-					}
-				)}
+							<Grid item xs={1}>
+								<Box>
+									{descTask.length >= 13
+										? descTask.slice(0, 12) + '...'
+										: descTask}
+								</Box>
+							</Grid>
+							<Grid item xs={1}>
+								<TimeDisplay time={startTime} />
+							</Grid>
+							<Grid item xs={1}>
+								<TimeDisplay time={endTime} />
+							</Grid>
+							<Grid item xs={1}>
+								<TimeDisplay time={spendTime} />
+							</Grid>
+							<Grid item xs={1}>
+								<Button
+									variant="outlined"
+									className={classes.btn}
+									onClick={() => history.push('/task/' + id)}
+								>
+									Info
+								</Button>
+							</Grid>
+							<Grid item xs={1}>
+								<Button
+									variant="outlined"
+									className={classes.btn}
+									onClick={() => deleteTask(id)}
+								>
+									Delete
+								</Button>
+							</Grid>
+						</Grid>
+					);
+				})}
 
 				{/* Btn generate +15 tasks */}
 				<Grid
@@ -261,20 +260,23 @@ Home.propTypes = {
 	inputTask: PropTypes.string,
 	handleChange: PropTypes.func,
 	time: PropTypes.shape(time),
-	isRun: Boolean,
+	isRun: PropTypes.bool,
 	startTimer: PropTypes.func,
 	stopTimer: PropTypes.func,
 	taskList: PropTypes.arrayOf(
 		PropTypes.shape({
-			id: PropTypes.string,
-			descTask: PropTypes.string,
-			startTime: PropTypes.shape(time),
-			endTime: PropTypes.shape(time),
-			spendTime: PropTypes.shape(time),
+			type: PropTypes.string,
+			payload: PropTypes.shape({
+				id: PropTypes.string,
+				descTask: PropTypes.string,
+				startTime: PropTypes.shape(time),
+				endTime: PropTypes.shape(time),
+				spendTime: PropTypes.shape(time),
+			}),
 		})
 	),
-	deleteTask: PropTypes.shape(time),
-	generateTasks: PropTypes.shape(time),
+	deleteTask: PropTypes.func,
+	generateTasks: PropTypes.func,
 };
 
 export default Home;

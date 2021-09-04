@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 //react-redux:
 import { useDispatch, useSelector } from 'react-redux';
-import { addTask, removeTask, removeAllTasks } from '../../store/tasksReducer';
+import {
+	asyncRemoveAllTasksSaga,
+	asyncAddTaskSaga,
+	asyncRemoveTaskSaga,
+} from '../../store/tasksReducer';
 
 //components:
 import Home from './home.js';
@@ -79,7 +83,7 @@ const HomeContainer = () => {
 			descTask: inputTask,
 		});
 
-		dispatch(addTask(newTaskCompleted));
+		dispatch(asyncAddTaskSaga(newTaskCompleted));
 		localStorage.removeItem(TIME_START_STORAGE);
 		localStorage.removeItem(DESC_TASK_STORAGE);
 		setInputTask(INIT_TASK);
@@ -87,12 +91,12 @@ const HomeContainer = () => {
 	};
 
 	const deleteTask = id => {
-		dispatch(removeTask(id));
+		dispatch(asyncRemoveTaskSaga(id));
 	};
 
 	//generateTasks
 	const generateTasks = () => {
-		dispatch(removeAllTasks());
+		dispatch(asyncRemoveAllTasksSaga());
 
 		//count tasks
 		const countTasks = Math.floor(Math.random() * 6) + 10;
@@ -141,7 +145,7 @@ const HomeContainer = () => {
 				descTask: RANDOM_TASKS_ARR[randomNameTask],
 			});
 
-			dispatch(addTask(newTaskCompleted));
+			dispatch(asyncAddTaskSaga(newTaskCompleted));
 		}
 	};
 

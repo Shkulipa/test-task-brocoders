@@ -6,8 +6,11 @@ export const HOME_ROUTE = '/',
 
 //reducers:
 export const ADD_TASK = 'ADD_TASK',
+	ASYNC_ADD_TASK_SAGA = 'ASYNC_ADD_TASK_SAGA',
 	REMOVE_TASK = 'REMOVE_TASK',
-	REMOVE_ALL_TASK = 'REMOVE_ALL_TASK';
+	ASYNC_REMOVE_TASK_SAGA = 'ASYNC_REMOVE_TASK_SAGA',
+	REMOVE_ALL_TASK = 'REMOVE_ALL_TASK',
+	ASYNC_REMOVE_ALL_TASK_SAGA = 'ASYNC_REMOVE_ALL_TASK_SAGA';
 
 //variables for localStorage and default initial value of task:
 export const DESC_TASK_STORAGE = 'descTask',
